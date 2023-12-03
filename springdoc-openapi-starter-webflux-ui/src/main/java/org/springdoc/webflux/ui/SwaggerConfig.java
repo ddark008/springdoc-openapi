@@ -24,6 +24,7 @@
 
 package org.springdoc.webflux.ui;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springdoc.core.configuration.SpringDocConfiguration;
@@ -140,15 +141,23 @@ public class SwaggerConfig implements WebFluxConfigurer {
 	 * @param swaggerUiOAuthProperties the swagger ui o auth properties
 	 * @param swaggerUiConfigParameters the swagger ui config parameters
 	 * @param swaggerWelcomeCommon the swagger welcome common
+	 * @param customSwaggerIndexTransformers the custom transformers for index page
 	 * @param objectMapperProvider the object mapper provider
 	 * @return the swagger index transformer
 	 */
 	@Bean
 	@ConditionalOnMissingBean
 	@Lazy(false)
-	SwaggerIndexTransformer indexPageTransformer(SwaggerUiConfigProperties swaggerUiConfig, SwaggerUiOAuthProperties swaggerUiOAuthProperties,
-			SwaggerUiConfigParameters swaggerUiConfigParameters, SwaggerWelcomeCommon swaggerWelcomeCommon, ObjectMapperProvider objectMapperProvider) {
-		return new SwaggerIndexPageTransformer(swaggerUiConfig, swaggerUiOAuthProperties, swaggerUiConfigParameters, swaggerWelcomeCommon, objectMapperProvider);
+	SwaggerIndexTransformer indexPageTransformer(
+			SwaggerUiConfigProperties swaggerUiConfig,
+			SwaggerUiOAuthProperties swaggerUiOAuthProperties,
+			SwaggerUiConfigParameters swaggerUiConfigParameters,
+			SwaggerWelcomeCommon swaggerWelcomeCommon,
+			List<CustomSwaggerIndexTransformer> customSwaggerIndexTransformers,
+			ObjectMapperProvider objectMapperProvider
+	) {
+		return new SwaggerIndexPageTransformer(swaggerUiConfig, swaggerUiOAuthProperties, swaggerUiConfigParameters,
+				swaggerWelcomeCommon, customSwaggerIndexTransformers, objectMapperProvider);
 	}
 
 	/**

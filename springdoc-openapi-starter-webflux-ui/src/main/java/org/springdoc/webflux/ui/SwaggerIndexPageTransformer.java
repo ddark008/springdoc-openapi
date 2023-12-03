@@ -25,6 +25,7 @@
 package org.springdoc.webflux.ui;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.springdoc.core.properties.SwaggerUiConfigParameters;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
@@ -52,6 +53,10 @@ public class SwaggerIndexPageTransformer extends AbstractSwaggerIndexTransformer
 	 * The Swagger welcome common.
 	 */
 	private final SwaggerWelcomeCommon swaggerWelcomeCommon;
+	/**
+	 * 	 The custom transformers for index page
+	 */
+	private final List<CustomSwaggerIndexTransformer> customSwaggerIndexTransformers;
 
 	/**
 	 * Instantiates a new Swagger index transformer.
@@ -59,12 +64,20 @@ public class SwaggerIndexPageTransformer extends AbstractSwaggerIndexTransformer
 	 * @param swaggerUiOAuthProperties the swagger ui o auth properties
 	 * @param swaggerUiConfigParameters the swagger ui config parameters
 	 * @param swaggerWelcomeCommon the swagger welcome common
+	 * @param customSwaggerIndexTransformers the custom transformers for index page
 	 * @param objectMapperProvider the object mapper provider
 	 */
-	public SwaggerIndexPageTransformer(SwaggerUiConfigProperties swaggerUiConfig, SwaggerUiOAuthProperties swaggerUiOAuthProperties,
-			SwaggerUiConfigParameters swaggerUiConfigParameters, SwaggerWelcomeCommon swaggerWelcomeCommon, ObjectMapperProvider objectMapperProvider) {
+	public SwaggerIndexPageTransformer(
+			SwaggerUiConfigProperties swaggerUiConfig,
+			SwaggerUiOAuthProperties swaggerUiOAuthProperties,
+			SwaggerUiConfigParameters swaggerUiConfigParameters,
+			SwaggerWelcomeCommon swaggerWelcomeCommon,
+			List<CustomSwaggerIndexTransformer> customSwaggerIndexTransformers,
+			ObjectMapperProvider objectMapperProvider
+	) {
 		super(swaggerUiConfig, swaggerUiOAuthProperties, swaggerUiConfigParameters, objectMapperProvider);
 		this.swaggerWelcomeCommon = swaggerWelcomeCommon;
+		this.customSwaggerIndexTransformers = customSwaggerIndexTransformers;
 	}
 
 	@Override
@@ -77,6 +90,9 @@ public class SwaggerIndexPageTransformer extends AbstractSwaggerIndexTransformer
 			boolean isIndexFound = antPathMatcher.match("**/swagger-ui/**/" + SWAGGER_INITIALIZER_JS, resource.getURL().toString());
 			if (isIndexFound) {
 				String html = defaultTransformations(resource.getInputStream());
+				for (CustomSwaggerIndexTransformer t: customSwaggerIndexTransformers){
+					html = t.transform(serverWebExchange, html);
+				}
 				return Mono.just(new TransformedResource(resource, html.getBytes(StandardCharsets.UTF_8)));
 			}
 			else {
