@@ -44,18 +44,13 @@ import org.springdoc.core.utils.Constants;
 import org.springframework.util.CollectionUtils;
 
 import static org.springdoc.core.properties.SwaggerUiConfigParameters.QUERY_CONFIG_ENABLED_PROPERTY;
+import static org.springdoc.core.utils.Constants.PRESETS;
 
 /**
  * The type Abstract swagger index transformer.
  * @author bnasslahsen
  */
 public class AbstractSwaggerIndexTransformer {
-
-	/**
-	 * The constant PRESETS.
-	 */
-	private static final String PRESETS = "presets: [";
-
 	/**
 	 * The Swagger ui o auth properties.
 	 */

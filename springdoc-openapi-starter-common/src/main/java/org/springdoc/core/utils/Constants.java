@@ -404,6 +404,12 @@ public final class Constants {
 	 * The constant SPRINGDOC_NULLABLE_REQUEST_PARAMETER_ENABLED.
 	 */
 	public static final String SPRINGDOC_NULLABLE_REQUEST_PARAMETER_ENABLED = "springdoc.nullable-request-parameter-enabled";
+
+	/**
+	 * The constant PRESETS.
+	 */
+	public static final String PRESETS = "presets: [";
+
 	/**
 	 * Instantiates a new Constants.
 	 */
